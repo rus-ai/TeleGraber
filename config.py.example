@@ -6,6 +6,8 @@ api_hash = "2222222222"
 # This filename will store telegram auth session
 app_name = "TeleGrab"
 
+stop_words = ["etherium", "bitcoin"]
+
 # Channel id or name via @ for accumulate posts
 my_channel_id = -1
 # List of channels to grab id or name via @
