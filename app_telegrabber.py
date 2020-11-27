@@ -3,8 +3,12 @@ import config
 
 client = TelegramClient(config.app_name, config.api_id, config.api_hash)
 
-
+print("Telegram grabber")
+print("Channel to grub list", config.channels)
+print("Channel to post", config.my_channel_id)
+print("Stop worlds", config.stop_words)
 print("Work begin")
+
 
 
 @client.on(events.NewMessage(chats=config.channels))
