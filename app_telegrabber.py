@@ -64,7 +64,7 @@ async def my_admin_event_handler(event):
 @client.on(events.NewMessage(chats=config.channels))
 async def my_event_handler(event):
     logging.info("Channels event")
-    logging.info(event.message)
+    logging.info(str(event.message))
     for word in config.stop_words:
         if word in event.message.text:
             stats.increase("spam_blocked")
