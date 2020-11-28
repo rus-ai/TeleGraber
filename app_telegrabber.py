@@ -29,7 +29,6 @@ class StatsClass(object):
     def increase(self, param):
         if param in self.__dict__:
             self.__setattr__(param, self.__getattribute__(param)+1)
-            pass
 
     def update(self):
         self.uptime = str(datetime.datetime.now() - launch_time)
