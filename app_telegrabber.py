@@ -50,9 +50,9 @@ logging.info("Work begin")
 
 
 @client.on(events.NewMessage(chats=config.admins))
-async def my_admin_event_handler(event):
+async def admin_message_handler(event):
     stats.increase("admin_events")
-    logging.info("Admin command received")
+    logging.info("Admin command received: "+event.message.text)
     command = str(event.message.text).upper()
     if "STATUS" in command:
         logging.info("Admin command received STATUS")
@@ -61,30 +61,49 @@ async def my_admin_event_handler(event):
     logging.info("Unknown admin command")
 
 
+def need_for_instant(message):
+    if config.try_show_instant:
+        if message:
+            for link in config.link_for_instant_preview:
+                if link.lower() in message:
+                    return True
+            return False
+        else:
+            return False
+    else:
+        return False
+
+
 @client.on(events.NewMessage(chats=config.channels))
-async def my_event_handler(event):
+async def message_handler(event):
     logging.info("Channels event")
-    logging.info(str(event.message))
+    logging.info(str(event.message).encode("utf-8"))
     for word in config.stop_words:
         if word in event.message.text:
             stats.increase("spam_blocked")
             logging.info("Spam post skipped")
             return
-    if event.message.text:
-        logging.info("Text event")
+    if need_for_instant(str(event.message.message).lower()):
+        logging.info("Text event instant added")
         stats.increase("text_events")
-        await client.send_message(config.my_channel_id, event.message.text, link_preview=True)
+        await client.send_message(config.my_channel_id, event.message.message, link_preview=True)
         return
     if event.message.media:
         stats.increase("media_events")
         logging.info("Media event")
-        await client.send_file(config.my_channel_id, file=event.message)
+        await client.send_file(config.my_channel_id, file=event.message, caption=event.message.message)
+        return
+    if event.message.text:
+        logging.info("Text event")
+        stats.increase("text_events")
+        await client.send_message(config.my_channel_id, event.message, link_preview=False)
         return
     logging.info("Unhandled message type")
 
 
+
 @client.on(events.Album(chats=config.channels))
-async def handler(event):
+async def album_handler(event):
     stats.increase("album_events")
     logging.info("Album event")
     await client.send_message(

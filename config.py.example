@@ -11,6 +11,10 @@ admins = ["@my_account"]
 
 stop_words = ["etherium", "bitcoin"]
 
+# Try clean media to turn on instant link preview
+try_show_instant = True
+link_for_instant_preview = ["http://", "https://"]
+
 # Channel id or name via @ for accumulate posts
 my_channel_id = -1
 # List of channels to grab id or name via @
